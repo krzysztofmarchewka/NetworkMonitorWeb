@@ -1,0 +1,14 @@
+.main-content {
+    background-color: rgb(231, 246, 251);
+    overflow: hidden;
+    height: 895px;
+    
+}
+
+#logo {
+    width: 100%;
+}
+
+.header-title {
+    font-size: 100px;
+}
