@@ -1,4 +1,8 @@
 import { Component, OnInit } from '@angular/core';
+import { KeyFilterModule } from 'primeng/keyfilter';
+import { FormBuilder } from '@angular/forms';
+import { NetworkMonitor } from '../models/NetworkMonitor.model';
+import { DbNetworkmonitorService } from '../services/db-networkmonitor.service';
 
 @Component({
   selector: 'app-history',
@@ -7,9 +11,16 @@ import { Component, OnInit } from '@angular/core';
 })
 export class HistoryComponent implements OnInit {
 
-  constructor() { }
+  historicalData: any
 
-  ngOnInit(): void {
+  constructor( private formBuilder: FormBuilder, private db: DbNetworkmonitorService) { }
+
+  ngOnInit() {
+
+  }
+
+  loadData() {
+    this.historicalData = this.db.getAllData();
   }
 
 }

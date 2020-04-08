@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CarouselModule } from 'primeng/carousel';
 import { ChartModule } from 'primeng/chart';
-import { NetworkScan } from '../models/NetworkScan.model';
+import { NetworkMonitor } from '../models/NetworkMonitor.model';
 
 @Component({
   selector: 'app-monitor',

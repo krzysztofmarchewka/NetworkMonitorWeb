@@ -1,4 +1,4 @@
-export class NetworkScan {
+export class NetworkMonitor {
     mac_src : String
     mac_dst : String
     ip_src : Number 
