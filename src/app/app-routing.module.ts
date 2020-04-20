@@ -9,15 +9,9 @@ import { SettingsComponent } from './settings/settings.component';
 
 const routes: Routes = [
   {
-    path: '',
-    component: HomeComponent,
-    children: [
-      {
-        path: 'home',
-        component: HomeComponent
-      }
-    ]
+    path: '', redirectTo: 'home', pathMatch: 'full'
   },
+  { path: 'home', component: HomeComponent},
   { path: 'monitor', component: MonitorComponent },
   { path: 'history', component: HistoryComponent },
   { path: 'charts', component: ChartsComponent },

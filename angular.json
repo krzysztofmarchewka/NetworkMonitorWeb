@@ -127,6 +127,10 @@
           }
         }
       }
-    }},
-  "defaultProject": "ipnetworkmonitor"
+    }
+  },
+  "defaultProject": "ipnetworkmonitor",
+  "cli": {
+    "analytics": false
+  }
 }
