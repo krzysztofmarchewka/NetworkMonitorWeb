@@ -18,16 +18,7 @@ const routes: Routes = [
       }
     ]
   },
-  {
-    path: 'monitor',
-    component: MonitorComponent,
-    children: [
-      {
-        path: 'Monitor',
-        component: MonitorComponent
-      }
-    ]
-  },
+  { path: 'monitor', component: MonitorComponent },
   { path: 'history', component: HistoryComponent },
   { path: 'charts', component: ChartsComponent },
   { path: 'settings', component: SettingsComponent },

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CarouselModule } from 'primeng/carousel';
 import { ChartModule } from 'primeng/chart';
 import { NetworkMonitor } from '../models/NetworkMonitor.model';
+import { DbNetworkmonitorService } from '../services/db-networkmonitor.service';
 
 @Component({
   selector: 'app-monitor',
@@ -10,12 +11,12 @@ import { NetworkMonitor } from '../models/NetworkMonitor.model';
 })
 export class MonitorComponent implements OnInit {
 
-  NetworkScan;
+  nt_data: NetworkMonitor[] = [];
   data: any
   data2: any
   responsiveOptions;
 
-  constructor() {
+  constructor(private networkData: DbNetworkmonitorService) {
     this.responsiveOptions = [
       {
         breakpoint: '1024px',
@@ -68,7 +69,13 @@ export class MonitorComponent implements OnInit {
   }
 
 
-ngOnInit() {
+  ngOnInit() {
+  }
 
-}
+  getMonitorData() {
+    this.networkData.getAllData().subscribe(nt_data => {
+      this.nt_data = nt_data
+    }),
+      err => console.log(err);
+  }
 }
