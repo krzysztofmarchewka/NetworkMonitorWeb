@@ -26,7 +26,7 @@
             <div class="row align-items-center">
               <div class="col">
                 <h6 class="text-uppercase text-muted mb-2">Sum of sent/retrived bytes</h6>
-                <span class="h2 mb-0"> bytes</span>
+                <span class="h2 mb-0" *ngIf="dataLoaded">{{bytesSum}} bytes</span>
               </div>
             </div>
           </div>
@@ -63,7 +63,7 @@
   </div>
   <!-- Timeline -->
   <hr>
-  <div class="header">
+  <div class="header" >
     <div class="container-fluid">
       <div class="header-body">
         <div class="row align-items-end">
@@ -76,7 +76,7 @@
       </div>
     </div>
   </div>
-  <div class="container-fluid">
+  <div class="container-fluid" *ngIf="dataLoaded">
     <div class="table table-striped">
       <table class="table table-striped">
         <thead>
@@ -87,8 +87,8 @@
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let data of ntData">
-            <td>{{data.ip_dst}}</td>
+          <tr *ngFor="let data of dataSummary">
+            <td>{{data.ip}}</td>
             <td>{{data.packets}}</td>
             <td>{{data.bytes}}</td>
           </tr>

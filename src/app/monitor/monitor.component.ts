@@ -1,5 +1,6 @@
+import { NetworkSummary } from './../models/NetworkSummary.model';
+import { NetworkMonitor } from './../models/NetworkMonitor.model';
 import { Component, OnInit } from '@angular/core';
-import { NetworkMonitor } from '../models/NetworkMonitor.model';
 import { DbNetworkmonitorService } from '../services/db-networkmonitor.service';
 import * as FusionCharts from 'fusioncharts';
 import { DateFormatPipe } from '../pipes/date-format.pipe';
@@ -12,11 +13,16 @@ import { DateFormatPipe } from '../pipes/date-format.pipe';
 export class MonitorComponent implements OnInit {
   ntData: NetworkMonitor[] = [];
   chartsLoaded = false;
+  dataLoaded = false;
   data: any;
   data2: any;
   responsiveOptions;
   x: Date[];
   y: any[];
+
+  bytesSum = 0;
+
+  dataSummary: NetworkSummary[] = [];
 
   dataSource: any;
   type: string;
@@ -102,6 +108,25 @@ export class MonitorComponent implements OnInit {
     this.getMonitorData();
   }
 
+  aggregateData() {
+
+    for (let data of this.ntData) {
+      let dataFiltered = this.ntData.filter(x => x.ip_dst === data.ip_dst)
+      if (this.dataSummary.find(x => x.ip === data.ip_dst) === undefined) {
+        let temp = new NetworkSummary();
+        temp.ip = data.ip_dst;
+        dataFiltered.forEach(x => {
+          temp.packets += x.packets;
+          temp.bytes += x.bytes;
+          this.bytesSum += x.bytes;
+        })
+        this.dataSummary.push(temp);
+      }
+    }
+    this.dataSummary.sort((a,b) => b.bytes - a.bytes);
+    this.dataLoaded = true;
+  }
+
   getMonitorData() {
     this.networkData.getAllData().subscribe(nt_data => {
 
@@ -137,14 +162,11 @@ export class MonitorComponent implements OnInit {
       this.dataSource.data = fusionTable;
 
       this.chartsLoaded = true;
+      this.aggregateData();
     }),
       err => console.log(err);
   }
 
-
-  createChart() {
-
-  }
 
   zip(arr1, arr2) {
     return arr1.map((k, i) => [k, arr2[i]]);
