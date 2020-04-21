@@ -69,7 +69,7 @@
         <div class="row align-items-end">
           <div class="col">
             <h1 class="header-title">
-              Timeline
+              List of servers
             </h1>
           </div>
         </div>
@@ -81,55 +81,16 @@
       <table class="table table-striped">
         <thead>
           <tr>
-            <th>Data</th>
-            <th>Unit</th>
+            <th>Server IP</th>
+            <th>Packets sent</th>
+            <th>Bytes sent</th>
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td>Mac address</td>
-            <td>...</td>
-            <td></td>
-          </tr>
-          <tr>
-            <td>IP address</td>
-            <td>...</td>
-            <td></td>
-          </tr>
-          <tr>
-            <td>Port</td>
-            <td>...</td>
-            <td></td>
-          </tr>
-          <tr>
-            <td>TCP flags</td>
-            <td>...</td>
-            <td></td>
-          </tr>
-          <tr>
-            <td>IP protocol</td>
-            <td>...</td>
-            <td></td>
-          </tr>
-          <tr>
-            <td>Packets</td>
-            <td>...</td>
-            <td></td>
-          </tr>
-          <tr>
-            <td>Bytes</td>
-            <td>...</td>
-            <td></td>
-          </tr>
-          <tr>
-            <td>Flows</td>
-            <td>...</td>
-            <td></td>
-          </tr>
-          <tr>
-            <td>Timestamp</td>
-            <td>...</td>
-            <td></td>
+          <tr *ngFor="let data of ntData">
+            <td>{{data.ip_dst}}</td>
+            <td>{{data.packets}}</td>
+            <td>{{data.bytes}}</td>
           </tr>
         </tbody>
       </table>
