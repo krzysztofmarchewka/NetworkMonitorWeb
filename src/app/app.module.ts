@@ -14,7 +14,6 @@ import { HomeComponent } from './home/home.component';
 import { MonitorComponent } from './monitor/monitor.component';
 import { NavbarComponent } from './navbar/navbar.component';
 import { HistoryComponent } from './history/history.component';
-import { ChartsComponent } from './charts/charts.component';
 import { SettingsComponent } from './settings/settings.component';
 import { DbNetworkmonitorService } from './services/db-networkmonitor.service';
 import * as FusionCharts from 'fusioncharts';
@@ -22,6 +21,8 @@ import * as TimeSeries from 'fusioncharts/fusioncharts.timeseries';
 import * as FusionTheme from 'fusioncharts/themes/fusioncharts.theme.fusion';
 import { FusionChartsModule } from 'angular-fusioncharts';
 import { DateFormatPipe } from './pipes/date-format.pipe';
+import { NgApexchartsModule } from "ng-apexcharts";
+import { ReversednsComponent } from './reversedns/reversedns.component';
 
 FusionChartsModule.fcRoot(FusionCharts, TimeSeries, FusionTheme);
 
@@ -32,9 +33,9 @@ FusionChartsModule.fcRoot(FusionCharts, TimeSeries, FusionTheme);
     MonitorComponent,
     NavbarComponent,
     HistoryComponent,
-    ChartsComponent,
     SettingsComponent,
-    DateFormatPipe
+    DateFormatPipe,
+    ReversednsComponent
   ],
   imports: [
     BrowserModule,
@@ -46,7 +47,8 @@ FusionChartsModule.fcRoot(FusionCharts, TimeSeries, FusionTheme);
     ChartModule,
     KeyFilterModule,
     HttpClientModule,
-    FusionChartsModule
+    FusionChartsModule,
+    NgApexchartsModule
   ],
   providers: [HttpClientModule, DbNetworkmonitorService, DateFormatPipe],
   bootstrap: [AppComponent]

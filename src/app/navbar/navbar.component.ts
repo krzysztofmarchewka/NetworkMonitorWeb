@@ -19,7 +19,7 @@ export class NavbarComponent implements OnInit {
       { label: 'Home', icon: 'pi pi-fw pi-home', tabindex: '0', routerLink: '/home'  },
       { label: 'Monitor', icon: 'pi pi-fw pi-desktop', tabindex: '1', routerLink: '/monitor'},
       { label: 'History', icon: 'pi pi-fw pi-pencil', tabindex: '2', routerLink: '/history' },
-      { label: 'Charts', icon: 'pi pi-fw pi-chart-bar', tabindex: '3', routerLink: '/charts' },
+      { label: 'Check IP', icon: 'pi pi-fw pi-chart-bar', tabindex: '3', routerLink: '/reversedns' },
       { label: 'Settings', icon: 'pi pi-fw pi-cog', tabindex: '4', routerLink: '/settings' }
     ];
     this.activeItem = this.items[0];

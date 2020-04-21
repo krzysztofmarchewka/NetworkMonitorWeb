@@ -1,0 +1,62 @@
+<div class="main-content">
+    <div class="header">
+        <div class="container-fluid">
+            <div class="header-body">
+                <div class="row align-items-end">
+                    <div class="col">
+                        <h6 class="header-pretitle mt-3">
+                            Reverse DNS
+                        </h6>
+                        <h1 class="header-title">
+                            Check IP address
+                        </h1>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <hr>
+    <!-- cards -->
+    <div class="container">
+        <div class="row">
+            <div class="col-12 col-lg-6 col-xl">
+                <div class="card">
+                    <div class="card-header text-center text-muted">
+                        Options
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h3>Type IP address which domain you want to reveal</h3>
+                                <div class="ui-g-12 ui-md-8">
+                                    <div class="ui-inputgroup">
+                                        <span class="ui-inputgroup-addon">IP</span>
+                                        <input type="text" pInputText placeholder="IP">
+                                        <button class="btn btn-light" (click)="onDNReveal()">Find out</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <ng-template #domainName>
+                                <h3>{{domainName}}</h3>
+                            </ng-template>
+                            
+                            <div class="col-md-6">
+                                <h3>Type domain name which IP address you want to reveal</h3>
+                                <div class="ui-g-12 ui-md-8">
+                                    <div class="ui-inputgroup">
+                                        <span class="ui-inputgroup-addon">www</span>
+                                        <input type="text" pInputText placeholder="website">
+                                        <button class="btn btn-light" (click)="onIpReveal()">Find out</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <ng-template #ip>
+                                <h3>{{ipAddress}}</h3>
+                            </ng-template>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
