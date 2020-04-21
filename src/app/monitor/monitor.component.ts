@@ -21,6 +21,7 @@ export class MonitorComponent implements OnInit {
   y: any[];
 
   bytesSum = 0;
+  packetsSum = 0;
 
   dataSummary: NetworkSummary[] = [];
 
@@ -116,14 +117,15 @@ export class MonitorComponent implements OnInit {
         let temp = new NetworkSummary();
         temp.ip = data.ip_dst;
         dataFiltered.forEach(x => {
-          temp.packets += x.packets;
-          temp.bytes += x.bytes;
+          temp.packetsSent += x.packets;
+          temp.bytesSent += x.bytes;
           this.bytesSum += x.bytes;
+          this.packetsSum += x.packets;
         })
         this.dataSummary.push(temp);
       }
     }
-    this.dataSummary.sort((a,b) => b.bytes - a.bytes);
+    this.dataSummary.sort((a,b) => b.bytesSent - a.bytesSent);
     this.dataLoaded = true;
   }
 

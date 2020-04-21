@@ -25,8 +25,16 @@
           <div class="card-body">
             <div class="row align-items-center">
               <div class="col">
-                <h6 class="text-uppercase text-muted mb-2">Sum of sent/retrived bytes</h6>
+                <h6 class="text-uppercase text-muted mb-2">Sum of sent bytes</h6>
                 <span class="h2 mb-0" *ngIf="dataLoaded">{{bytesSum}} bytes</span>
+              </div>
+              <div class="col">
+                <h6 class="text-uppercase text-muted mb-2">Sum of sent packets</h6>
+                <span class="h2 mb-0" *ngIf="dataLoaded">{{packetsSum}} packets</span>
+              </div>
+              <div class="col">
+                <h6 class="text-uppercase text-muted mb-2">Number of ip addresses</h6>
+                <span class="h2 mb-0" *ngIf="dataLoaded">{{dataSummary.length}} unique addresses</span>
               </div>
             </div>
           </div>
@@ -84,13 +92,15 @@
             <th>Server IP</th>
             <th>Packets sent</th>
             <th>Bytes sent</th>
+            <!-- <th>Packets recived</th>
+            <th>Bytes received</th> -->
           </tr>
         </thead>
         <tbody>
           <tr *ngFor="let data of dataSummary">
             <td>{{data.ip}}</td>
-            <td>{{data.packets}}</td>
-            <td>{{data.bytes}}</td>
+            <td>{{data.packetsSent}}</td>
+            <td>{{data.bytesSent}}</td>
           </tr>
         </tbody>
       </table>
