@@ -18,19 +18,13 @@ export class MonitorComponent implements OnInit {
   x: Date[];
   y: any[];
 
-  dataUrl =
-    'https://s3.eu-central-1.amazonaws.com/fusion.store/ft/data/specify-initial-time-interval_data.json';
-  schemaUrl =
-    'https://s3.eu-central-1.amazonaws.com/fusion.store/ft/schema/specify-initial-time-interval_schema.json';
-
-
   dataSource: any;
   type: string;
   width: string;
   height: string;
 
   constructor(private networkData: DbNetworkmonitorService,
-              private _dateFormatPipe: DateFormatPipe) {
+    private _dateFormatPipe: DateFormatPipe) {
     this.responsiveOptions = [
       {
         breakpoint: '1024px',

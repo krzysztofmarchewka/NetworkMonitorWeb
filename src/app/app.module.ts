@@ -1,3 +1,4 @@
+import { ReverseDnsService } from './services/reverse-dns.service';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 
@@ -50,7 +51,7 @@ FusionChartsModule.fcRoot(FusionCharts, TimeSeries, FusionTheme);
     FusionChartsModule,
     NgApexchartsModule
   ],
-  providers: [HttpClientModule, DbNetworkmonitorService, DateFormatPipe],
+  providers: [HttpClientModule, DbNetworkmonitorService, DateFormatPipe, ReverseDnsService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
