@@ -12,6 +12,7 @@
   "private": true,
   "dependencies": {
     "@angular/animations": "^9.1.0",
+    "@angular/cdk": "^9.2.2",
     "@angular/common": "~9.1.0",
     "@angular/compiler": "~9.1.0",
     "@angular/core": "~9.1.0",
@@ -26,6 +27,7 @@
     "fusioncharts": "^3.15.1-sr.1",
     "jquery": "^3.4.1",
     "ng-apexcharts": "^1.2.3",
+    "ngx-pagination": "^5.0.0",
     "popper.js": "^1.16.1",
     "primeicons": "^2.0.0",
     "primeng": "^9.0.5",

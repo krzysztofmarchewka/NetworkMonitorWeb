@@ -1,110 +1,111 @@
 <div class="main-content">
-  <div class="header">
-    <div class="container-fluid">
-      <div class="header-body">
-        <div class="row align-items-end">
-          <div class="col">
-            <h6 class="header-pretitle mt-3">
-              Overview
-            </h6>
-            <h1 class="header-title">
-              Dashboard
-            </h1>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-  <!-- end of header -->
-  <hr>
-  <!-- cards -->
-  <div class="container-fluid">
-    <div class="row">
-      <div class="col-12 col-lg-6 col-xl">
-        <div class="card">
-          <div class="card-body">
-            <div class="row align-items-center">
-              <div class="col">
-                <h6 class="text-uppercase text-muted mb-2">Sum of sent bytes</h6>
-                <span class="h2 mb-0" *ngIf="dataLoaded">{{bytesSum}} bytes</span>
-              </div>
-              <div class="col">
-                <h6 class="text-uppercase text-muted mb-2">Sum of sent packets</h6>
-                <span class="h2 mb-0" *ngIf="dataLoaded">{{packetsSum}} packets</span>
-              </div>
-              <div class="col">
-                <h6 class="text-uppercase text-muted mb-2">Number of ip addresses</h6>
-                <span class="h2 mb-0" *ngIf="dataLoaded">{{dataSummary.length}} unique addresses</span>
-              </div>
+    <div class="header">
+        <div class="container-fluid">
+            <div class="header-body">
+                <div class="row align-items-end">
+                    <div class="col">
+                        <h6 class="header-pretitle mt-3">
+                            Overview
+                        </h6>
+                        <h1 class="header-title">
+                            Dashboard
+                        </h1>
+                    </div>
+                </div>
             </div>
-          </div>
         </div>
-      </div>
     </div>
-  </div>
-  <!-- end of cards -->
-  <hr>
-  <!-- Chart -->
-  <div class="header">
+    <!-- end of header -->
+    <hr>
+    <!-- cards -->
     <div class="container-fluid">
-      <div class="header-body">
-        <div class="row align-items-end">
-          <div class="col">
-            <h1 class="header-title">
-              Packet chart
-            </h1>
-          </div>
+        <div class="row">
+            <div class="col-12 col-lg-6 col-xl">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row align-items-center">
+                            <div class="col">
+                                <h6 class="text-uppercase text-muted mb-2">Sum of sent bytes</h6>
+                                <span class="h2 mb-0" *ngIf="dataLoaded">{{bytesSum}} bytes</span>
+                            </div>
+                            <div class="col">
+                                <h6 class="text-uppercase text-muted mb-2">Sum of sent packets</h6>
+                                <span class="h2 mb-0" *ngIf="dataLoaded">{{packetsSum}} packets</span>
+                            </div>
+                            <div class="col">
+                                <h6 class="text-uppercase text-muted mb-2">Number of ip addresses</h6>
+                                <span class="h2 mb-0" *ngIf="dataLoaded">{{dataSummary.length}} unique addresses</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-      </div>
     </div>
-  </div>
-  <div class="container-fluid">
-    <div class="row">
-
-      <!-- <p-chart type="bar" [data]="data" width="auto" height="40vh"></p-chart> -->
-      <div>
-        <fusioncharts [type]="type" [width]="width" [height]="height" [dataSource]="dataSource"></fusioncharts>
-      </div>
-
-
+    <!-- end of cards -->
+    <hr>
+    <!-- Chart -->
+    <div class="header">
+        <div class="container-fluid">
+            <div class="header-body">
+                <div class="row align-items-end">
+                    <div class="col">
+                        <h1 class="header-title">
+                            Packet chart
+                        </h1>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-  </div>
-  <!-- Timeline -->
-  <hr>
-  <div class="header" >
     <div class="container-fluid">
-      <div class="header-body">
-        <div class="row align-items-end">
-          <div class="col">
-            <h1 class="header-title">
-              List of servers
-            </h1>
-          </div>
+        <div class="row">
+
+            <!-- <p-chart type="bar" [data]="data" width="auto" height="40vh"></p-chart> -->
+            <div>
+                <fusioncharts [type]="type" [width]="width" [height]="height" [dataSource]="dataSource"></fusioncharts>
+            </div>
+
+
         </div>
-      </div>
     </div>
-  </div>
-  <div class="container-fluid" *ngIf="dataLoaded">
-    <div class="table table-striped">
-      <table class="table table-striped">
-        <thead>
-          <tr>
-            <th>Server IP</th>
-            <th>Packets sent</th>
-            <th>Bytes sent</th>
-            <!-- <th>Packets recived</th>
+    <!-- Timeline -->
+    <hr>
+    <div class="header">
+        <div class="container-fluid">
+            <div class="header-body">
+                <div class="row align-items-end">
+                    <div class="col">
+                        <h1 class="header-title">
+                            List of servers
+                        </h1>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container-fluid" *ngIf="dataLoaded">
+        <div class="table table-striped">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Server IP</th>
+                        <th>Packets sent</th>
+                        <th>Bytes sent</th>
+                        <!-- <th>Packets recived</th>
             <th>Bytes received</th> -->
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let data of dataSummary">
-            <td>{{data.ip}}</td>
-            <td>{{data.packetsSent}}</td>
-            <td>{{data.bytesSent}}</td>
-          </tr>
-        </tbody>
-      </table>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let data of dataSummary | paginate: config">
+                        <td>{{data.ip}}</td>
+                        <td>{{data.packetsSent}}</td>
+                        <td>{{data.bytesSent}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
-  </div>
+    <pagination-controls (pageChange)=pageChanged($event)></pagination-controls>
 
 </div>
