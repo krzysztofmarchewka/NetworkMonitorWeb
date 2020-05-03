@@ -53,6 +53,7 @@ FusionChartsModule.fcRoot(FusionCharts, TimeSeries, FusionTheme);
     FusionChartsModule,
     NgApexchartsModule,
     NgxPaginationModule,
+    DropdownModule
   ],
   providers: [
     HttpClientModule,

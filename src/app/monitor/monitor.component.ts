@@ -5,6 +5,14 @@ import { DbNetworkmonitorService } from "../services/db-networkmonitor.service";
 import * as FusionCharts from "fusioncharts";
 import { DateFormatPipe } from "../pipes/date-format.pipe";
 import { NgxPaginationModule } from "ngx-pagination";
+import { DropdownModule } from "primeng/dropdown";
+import { SelectItem } from "primeng/api";
+import { KeyFilterModule } from "primeng/keyfilter";
+
+export interface Option {
+  name: string;
+  id: number;
+}
 
 @Component({
   selector: "app-monitor",
@@ -18,7 +26,6 @@ export class MonitorComponent implements OnInit {
   data: any;
   data2: any;
 
-  responsiveOptions;
   x: Date[];
   y: any[];
 
@@ -33,27 +40,18 @@ export class MonitorComponent implements OnInit {
   height: string;
 
   config: any;
+  showSingleIp: false;
+  showListIp: false;
+  options: Option[];
+  selectedOption: Option;
 
   constructor(
     private networkData: DbNetworkmonitorService,
     private _dateFormatPipe: DateFormatPipe
   ) {
-    this.responsiveOptions = [
-      {
-        breakpoint: "1024px",
-        numVisible: 3,
-        numScroll: 3,
-      },
-      {
-        breakpoint: "768px",
-        numVisible: 2,
-        numScroll: 2,
-      },
-      {
-        breakpoint: "560px",
-        numVisible: 1,
-        numScroll: 1,
-      },
+    this.options = [
+      { name: "Single IP address", id: 1 },
+      { name: "List of the servers", id: 2 },
     ];
 
     this.data2 = {
