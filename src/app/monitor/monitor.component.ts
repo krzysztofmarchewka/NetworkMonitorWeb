@@ -1,3 +1,5 @@
+import { DNS } from './../models/DNS.model';
+import { ReverseDnsService } from './../services/reverse-dns.service';
 import { NetworkSummary } from './../models/NetworkSummary.model';
 import { NetworkMonitor } from './../models/NetworkMonitor.model';
 import { Component, OnInit } from '@angular/core';
@@ -8,6 +10,7 @@ import { NgxPaginationModule } from 'ngx-pagination';
 import { DropdownModule } from 'primeng/dropdown';
 import { SelectItem } from 'primeng/api';
 import { KeyFilterModule } from 'primeng/keyfilter';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 export interface Option {
   name: string;
@@ -23,8 +26,10 @@ export class MonitorComponent implements OnInit {
   ntData: NetworkMonitor[] = [];
   chartsLoaded = false;
   dataLoaded = false;
+  aggregatedDataLoaded = false;
   data: any;
   data2: any;
+  pieData: any;
 
   x: Date[];
   y: any[];
@@ -33,6 +38,7 @@ export class MonitorComponent implements OnInit {
   bytesSum = 0;
   packetsSum = 0;
 
+  DNSs: DNS[] = [];
   dataSummary: NetworkSummary[] = [];
 
   dataSource: any;
@@ -55,28 +61,19 @@ export class MonitorComponent implements OnInit {
 
   constructor(
     private networkData: DbNetworkmonitorService,
-    private _dateFormatPipe: DateFormatPipe
+    private _dateFormatPipe: DateFormatPipe,
+    private reverseDnsService: ReverseDnsService,
+    private spinner: NgxSpinnerService
   ) {
     this.options = [
       { name: 'Single IP address', id: 1 },
       { name: 'List of the servers', id: 2 },
     ];
-    this.selectedOption = this.options[0];
-
-    this.data2 = {
-      labels: ['A', 'B', 'C'],
-      datasets: [
-        {
-          data: [300, 50, 100],
-          backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56'],
-          hoverBackgroundColor: ['#FF6384', '#36A2EB', '#FFCE56'],
-        },
-      ],
-    };
+    this.selectedOption = this.options[1];
 
     this.type = 'timeseries';
     this.width = '100%';
-    this.height = '600';
+    this.height = '700';
 
     // This is the dataSource of the chart
     this.dataSource = {
@@ -110,25 +107,33 @@ export class MonitorComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.spinner.show();
+    this.getDNSs();
     this.getIpOptions();
     this.getMonitorData();
   }
 
+  getDNSs() {
+    this.reverseDnsService.getDNSs().subscribe(dnss => {
+      this.DNSs = dnss;
+    })
+  }
+
   getIpOptions() {
-    this.ipSourceOptions.push({ id: 0, name: "" });
-    this.ipDestinationOptions.push({ id: 0, name: "" });
+    this.ipSourceOptions.push({ id: 0, name: '' });
+    this.ipDestinationOptions.push({ id: 0, name: '' });
     this.networkData.getAllData('', '').subscribe((networkData) => {
-      var id = 0;
+      let id = 0;
       networkData.forEach(data => {
         data.ip_src = data.ip_src.split(',')[0].replace('(', '');
         data.ip_dst = data.ip_dst.split(',')[0].replace('(', '');
 
         if (this.ipSourceOptions.find(x => x.name === data.ip_src) === undefined) {
-          this.ipSourceOptions.push({ id: id, name: data.ip_src });
+          this.ipSourceOptions.push({ id, name: data.ip_src });
           id += 1;
         }
         if (this.ipSourceOptions.find(x => x.name === data.ip_dst) === undefined) {
-          this.ipDestinationOptions.push({ id: id, name: data.ip_dst });
+          this.ipDestinationOptions.push({ id, name: data.ip_dst });
           id += 1;
         }
 
@@ -138,11 +143,16 @@ export class MonitorComponent implements OnInit {
   }
 
   aggregateData() {
-    for (let data of this.ntData) {
-      let dataFiltered = this.ntData.filter((x) => x.ip_dst === data.ip_dst);
+    for (const data of this.ntData) {
+      const dataFiltered = this.ntData.filter((x) => x.ip_dst === data.ip_dst);
       if (this.dataSummary.find((x) => x.ip === data.ip_dst) === undefined) {
-        let temp = new NetworkSummary();
+        const temp = new NetworkSummary();
+        let fixed_ip = data.ip_dst.split(',')[0].replace('(', '');
         temp.ip = data.ip_dst;
+        const dns = this.DNSs.find(x => x.ip === fixed_ip);
+        if (dns !== undefined) {
+          temp.name = dns.name;
+        }
         dataFiltered.forEach((x) => {
           temp.packetsSent += x.packets;
           temp.bytesSent += x.bytes;
@@ -153,7 +163,20 @@ export class MonitorComponent implements OnInit {
       }
     }
     this.dataSummary.sort((a, b) => b.bytesSent - a.bytesSent);
-    this.dataLoaded = true;
+
+
+    this.pieData = {
+      labels: this.dataSummary.slice(1, 13).map(x => x.name),
+      datasets: [
+        {
+          data: this.dataSummary.slice(1, 13).map(x => x.bytesSent),
+          backgroundColor: uniqueColors,
+          hoverBackgroundColor: uniqueColors
+        }]
+    };
+
+    this.aggregatedDataLoaded = true;
+    this.spinner.hide();
   }
 
   getMonitorData() {
@@ -214,3 +237,6 @@ export class MonitorComponent implements OnInit {
     return arr1.map((k, i) => [k, arr2[i]]);
   }
 }
+
+
+export let uniqueColors = ['#FF6384','#36A2EB','#FFCE56','#0bff5b','#ab4c0a','#fb6167','#6cc8f9','#572bdd','#8b0578','#7e20c1','#01e83a','#585564','#1c65e8','#9c1916','#bd479b','#6231c2','#928a58','#4b747b','#202c4c','#d7bbce','#a47aab','#afed65','#f75fc8','#944b62','#042b3c','#b62886','#e1bae1','#57c85d','#39ab36','#bcf7bd','#763d72','#68395a','#795038','#964ca2','#fa9650','#ad3e68','#7a923b','#6f7747','#17d25d','#4fc32e']

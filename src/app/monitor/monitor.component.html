@@ -26,15 +26,16 @@
             <div class="row align-items-center">
               <div class="col">
                 <h6 class="text-uppercase text-muted mb-2">Sum of sent bytes</h6>
-                <span class="h2 mb-0" *ngIf="dataLoaded">{{bytesSum}} bytes</span>
+                <span id="bytes" class="h2 mb-0" *ngIf="aggregatedDataLoaded">{{bytesSum}} bytes</span>
               </div>
               <div class="col">
                 <h6 class="text-uppercase text-muted mb-2">Sum of sent packets</h6>
-                <span class="h2 mb-0" *ngIf="dataLoaded">{{packetsSum}} packets</span>
+                <span id="packets" class="h2 mb-0" *ngIf="aggregatedDataLoaded">{{packetsSum}} packets</span>
               </div>
               <div class="col">
                 <h6 class="text-uppercase text-muted mb-2">Number of ip addresses</h6>
-                <span class="h2 mb-0" *ngIf="dataLoaded">{{dataSummary.length}} unique addresses</span>
+                <span id="addresses" class="h2 mb-0" *ngIf="aggregatedDataLoaded">{{dataSummary.length}} unique
+                  addresses</span>
               </div>
             </div>
           </div>
@@ -42,6 +43,22 @@
       </div>
     </div>
   </div>
+  <hr>
+  <div class="header">
+    <div class="container-fluid">
+      <div class="header-body">
+        <div class="row align-items-end">
+          <div class="col">
+            <h1 class="header-title">
+              Pie chart
+            </h1>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <p-chart type="doughnut" [width]="width" [height]="height"  [data]="pieData"></p-chart>
   <!-- end of cards -->
   <hr>
   <!-- Chart -->
@@ -58,82 +75,33 @@
       </div>
     </div>
   </div>
-</div>
-<div class="d-flex justify-content-center">
+
 
   <div>
     <fusioncharts [type]="type" [width]="width" [height]="height" [dataSource]="dataSource"></fusioncharts>
   </div>
 
-</div>
-<div class="d-flex flex-row justify-content-around" style="max-width: 30%;" *ngIf="optionLoaded">
-  <div class="d-flex flex-column ">
-    <h5 class="first">Source IP filter</h5>
-    <p-dropdown [options]="ipSourceOptions" [(ngModel)]="ipSourceFilter" placeholder="Select an option"
-      optionLabel="name"></p-dropdown>
+
+  <div class="d-flex flex-row justify-content-center" style="max-width: 100%;" *ngIf="optionLoaded">
+    <div class="d-flex flex-column padded-item">
+      <h5 class="first">Source IP filter</h5>
+      <p-dropdown id="sourceIpDropdown" [filter]="true" [filterBy]="'label'" [options]="ipSourceOptions"
+        [(ngModel)]="ipSourceFilter" placeholder="Select an option" optionLabel="name"></p-dropdown>
+    </div>
+    <div class="d-flex flex-column padded-item">
+      <h5 class="first">Destination IP filter</h5>
+      <p-dropdown id="destinationIpDropdown" [filter]="true" [filterBy]="'label'" [options]="ipDestinationOptions"
+        [(ngModel)]="ipDestinationFilter" placeholder="Select an option" optionLabel="name"></p-dropdown>
+    </div>
+
+    <button class="padded-item" type="button" (click)="getMonitorData()" class="btn btn-info btn-lg"> Filter </button>
+
   </div>
-  <div class="d-flex flex-column">
-    <h5 class="first">Destination IP filter</h5>
-    <p-dropdown [options]="ipDestinationOptions" [(ngModel)]="ipDestinationFilter" placeholder="Select an option"
-      optionLabel="name"></p-dropdown>
-  </div>
 
-  <button type="button" (click)="getMonitorData()" class="btn btn-info btn-lg"> Filter </button>
+  <!-- Timeline -->
+  <hr>
 
-</div>
-
-
-<!-- Timeline -->
-<hr>
-<div class="header">
-  <div class="container-fluid">
-    <h3 class="first">Options</h3>
-    <p-dropdown [options]="options" [(ngModel)]="selectedOption" placeholder="Select an option" optionLabel="name">
-    </p-dropdown>
-  </div>
-</div>
-
-<div *ngIf="selectedOption.id === 1">
-  <!-- opcja dla jednego adresu -->
   <div class="header" #SingleIp>
-    <div class="container-fluid">
-      <div class="header-body">
-        <div class="row align-items-end">
-          <div class="col">
-            <h1 class="header-title">
-              Ip address filter
-            </h1>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="container-fluid" *ngIf="dataLoaded">
-    <div class="table table-striped">
-      <table class="table table-striped">
-        <thead>
-          <tr>
-            <th>Server IP</th>
-            <th>Packets sent</th>
-            <th>Bytes sent</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let data of dataSummary">
-            <td>{{data.ip}}</td>
-            <td>{{data.packetsSent}}</td>
-            <td>{{data.bytesSent}}</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
-</div>
-
-<div *ngIf="selectedOption.id === 2">
-  <!-- opcja dla listy adresów -->
-  <div class="header" #ListIp >
     <div class="container-fluid">
       <div class="header-body">
         <div class="row align-items-end">
@@ -146,29 +114,58 @@
       </div>
     </div>
   </div>
-  <div class="container-fluid" *ngIf="dataLoaded">
-    <div class="table table-striped">
-      <table class="table table-striped">
-        <thead>
-          <tr>
-            <th>Server IP</th>
-            <th>Packets sent</th>
-            <th>Bytes sent</th>
-            <!-- <th>Packets recived</th>
-            <th>Bytes received</th> -->
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let data of dataSummary | paginate: config">
-            <td>{{data.ip}}</td>
-            <td>{{data.packetsSent}}</td>
-            <td>{{data.bytesSent}}</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
-  <div class="row justify-content-center">
-    <pagination-controls (pageChange)=pageChanged($event)></pagination-controls>
-  </div>
+
+  <p-table #dt id="customers" [value]="dataSummary" dataKey="id" [rowHover]="true" [rows]="25"
+    [showCurrentPageReport]="true" [rowsPerPageOptions]="[10,25,50]" [paginator]="true"
+    currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [filterDelay]="100"
+    *ngIf="aggregatedDataLoaded">
+    <ng-template pTemplate="header">
+      <tr>
+        <th> Server IP
+        </th>
+        <th>Reverse DNS
+        </th>
+        <th pSortableColumn="packetsSent">Packets sent <p-sortIcon field="packetsSent"></p-sortIcon>
+        </th>
+        <th pSortableColumn="bytesSent">Bytes sent <p-sortIcon field="bytesSent"></p-sortIcon>
+        </th>
+      </tr>
+      <tr>
+        <th>
+          <input pInputText type="text" (input)="dt.filter($event.target.value, 'ip', 'contains')"
+            placeholder="Search by IP" class="ui-column-filter">
+        </th>
+        <th>
+          <input pInputText type="text" (input)="dt.filter($event.target.value, 'name', 'contains')"
+            placeholder="Search by DNS" class="ui-column-filter">
+        </th>
+        <th>
+        </th>
+        <th>
+        </th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-data>
+      <tr class="ui-selectable-row">
+        <td>
+          {{data.ip}}
+        </td>
+        <td>
+          {{data.name}}
+        </td>
+        <td>
+          {{data.packetsSent}}
+        </td>
+        <td>
+          {{data.bytesSent}}
+        </td>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="emptymessage">
+      <tr>
+        <td colspan="8" style="text-align:left">No customers found.</td>
+      </tr>
+    </ng-template>
+  </p-table>
 </div>
+<ngx-spinner bdColor = "rgba(0, 0, 0, 0.8)" size = "medium" color = "#fff" type = "square-jelly-box" [fullScreen] = "true"><p style="color: white" > Loading... </p></ngx-spinner>

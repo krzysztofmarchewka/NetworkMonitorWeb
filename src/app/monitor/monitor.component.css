@@ -1,9 +1,40 @@
 .card {
-    margin-bottom: 1.5rem;
-    border-color: #edf2f9;
-    box-shadow: 0 0.75rem 1.5rem rgba(18, 38, 63, .03);
+  margin-bottom: 1.5rem;
+  border-color: #edf2f9;
+  box-shadow: 0 0.75rem 1.5rem rgba(18, 38, 63, .03);
 }
 
 .main-content {
-    overflow: hidden;
+  overflow: hidden;
+}
+
+#customers {
+  font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+#customers td,
+#customers th {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+#customers tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+#customers tr:hover {
+  background-color: #ddd;
+}
+
+#customers th {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  text-align: left;
+  color: black;
+}
+
+.padded-item {
+  padding-right: 5%;
 }

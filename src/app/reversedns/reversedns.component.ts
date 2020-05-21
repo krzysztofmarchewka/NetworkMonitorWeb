@@ -3,6 +3,7 @@ import { DbNetworkmonitorService } from './../services/db-networkmonitor.service
 import { ReverseDnsService } from './../services/reverse-dns.service';
 import { Component, OnInit } from '@angular/core';
 import { DNS } from '../models/DNS.model';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'app-reversedns',
@@ -13,9 +14,11 @@ export class ReversednsComponent implements OnInit {
 
   DNSs: DNS[];
   NetworkData: NetworkMonitor[];
+  UniqueIps: string[] = [];
 
   constructor(private reverseDnsService: ReverseDnsService,
-    private dbNetworkmonitorService: DbNetworkmonitorService) { }
+    private dbNetworkmonitorService: DbNetworkmonitorService
+  ) { }
 
   ngOnInit(): void {
     this.getDNSs();
@@ -23,8 +26,11 @@ export class ReversednsComponent implements OnInit {
   }
 
   getNetworkData() {
-    this.dbNetworkmonitorService.getAllData("", "").subscribe(data => {
+    this.dbNetworkmonitorService.getAllData('', '').subscribe(data => {
       this.NetworkData = data;
+      data.forEach(ip => {
+        this.UniqueIps.push(ip.ip_dst);
+      });
     });
   }
 
@@ -35,16 +41,19 @@ export class ReversednsComponent implements OnInit {
   }
 
   async updateDNS() {
-    var i = 0;
-    console.log(this.NetworkData)
-    for (let data of this.NetworkData) {
+    let i = 0;
+    let r = /\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b/;
+    console.log(this.UniqueIps);
+    for (const ip of this.UniqueIps) {
       await this.delay(1000);
-      if (i < 2) {
+      if (i < 100) {
         i = i + 1;
         console.log(i);
-        let dns = this.DNSs.find(x => x.ip === data.ip_dst);
+        let t = ip.match(r)[0];
+        const dns = this.DNSs.find(x => x.ip === t);
+        console.log(dns)
         if (dns === null || dns === undefined) {
-          this.checkDNS(data.ip_dst);
+          this.checkDNS(t);
         }
       } else {
         return;
@@ -54,20 +63,27 @@ export class ReversednsComponent implements OnInit {
   }
 
   async checkDNS(ip: string) {
-    var r = /\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b/;
 
-    var t = ip.match(r)[0];
-    console.log(t);
-    await this.reverseDnsService.checkDNS(t).subscribe(async data => {
+    await this.reverseDnsService.checkDNS(ip).subscribe(async data => {
       console.log(data);
-      await this.reverseDnsService.createDNS(new DNS(t, data['result'][0]['name'])).subscribe(x => {
-        console.log('Created dns ' + x);
-        this.getDNSs();
-      });
+      if (data !== 'no records found') {
+        await this.reverseDnsService.createDNS(new DNS(ip, data.split(' ')[1])).subscribe(x => {
+          console.log('Created dns ' + x);
+          this.getDNSs();
+        });
+      }
+      else {
+        await this.reverseDnsService.createDNS(new DNS(ip, null)).subscribe(x => {
+          console.log('Created dns ' + x);
+          this.getDNSs();
+        });
+      }
     });
   }
 
   delay(ms: number) {
     return new Promise(resolve => setTimeout(resolve, ms));
   }
+
 }
+
