@@ -18,7 +18,7 @@ export class ReverseDnsService {
 
   checkDNS(ip: string) {
     this.params.q = ip;
-    return this.http.get(environment.REVERSE_DNS_API, { params: this.params });
+    return this.http.get<string>(environment.REVERSE_DNS_API, { params: this.params, headers: { responseType: 'text' } });
   }
 
   getDNSs() {

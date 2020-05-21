@@ -1,13 +1,13 @@
-import { NetworkSummary } from "./../models/NetworkSummary.model";
-import { NetworkMonitor } from "./../models/NetworkMonitor.model";
-import { Component, OnInit } from "@angular/core";
-import { DbNetworkmonitorService } from "../services/db-networkmonitor.service";
-import * as FusionCharts from "fusioncharts";
-import { DateFormatPipe } from "../pipes/date-format.pipe";
-import { NgxPaginationModule } from "ngx-pagination";
-import { DropdownModule } from "primeng/dropdown";
-import { SelectItem } from "primeng/api";
-import { KeyFilterModule } from "primeng/keyfilter";
+import { NetworkSummary } from './../models/NetworkSummary.model';
+import { NetworkMonitor } from './../models/NetworkMonitor.model';
+import { Component, OnInit } from '@angular/core';
+import { DbNetworkmonitorService } from '../services/db-networkmonitor.service';
+import * as FusionCharts from 'fusioncharts';
+import { DateFormatPipe } from '../pipes/date-format.pipe';
+import { NgxPaginationModule } from 'ngx-pagination';
+import { DropdownModule } from 'primeng/dropdown';
+import { SelectItem } from 'primeng/api';
+import { KeyFilterModule } from 'primeng/keyfilter';
 
 export interface Option {
   name: string;
@@ -15,9 +15,9 @@ export interface Option {
 }
 
 @Component({
-  selector: "app-monitor",
-  templateUrl: "./monitor.component.html",
-  styleUrls: ["./monitor.component.css"],
+  selector: 'app-monitor',
+  templateUrl: './monitor.component.html',
+  styleUrls: ['./monitor.component.css'],
 })
 export class MonitorComponent implements OnInit {
   ntData: NetworkMonitor[] = [];
@@ -28,6 +28,7 @@ export class MonitorComponent implements OnInit {
 
   x: Date[];
   y: any[];
+  z: any[];
 
   bytesSum = 0;
   packetsSum = 0;
@@ -38,6 +39,13 @@ export class MonitorComponent implements OnInit {
   type: string;
   width: string;
   height: string;
+
+  optionLoaded = false;
+  ipSourceOptions: Option[] = [];
+  ipDestinationOptions: Option[] = [];
+
+  ipSourceFilter: Option;
+  ipDestinationFilter: Option;
 
   config: any;
   showSingleIp: false;
@@ -50,57 +58,47 @@ export class MonitorComponent implements OnInit {
     private _dateFormatPipe: DateFormatPipe
   ) {
     this.options = [
-      { name: "Single IP address", id: 1 },
-      { name: "List of the servers", id: 2 },
+      { name: 'Single IP address', id: 1 },
+      { name: 'List of the servers', id: 2 },
     ];
 
     this.data2 = {
-      labels: ["A", "B", "C"],
+      labels: ['A', 'B', 'C'],
       datasets: [
         {
           data: [300, 50, 100],
-          backgroundColor: ["#FF6384", "#36A2EB", "#FFCE56"],
-          hoverBackgroundColor: ["#FF6384", "#36A2EB", "#FFCE56"],
+          backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56'],
+          hoverBackgroundColor: ['#FF6384', '#36A2EB', '#FFCE56'],
         },
       ],
     };
 
-    this.type = "timeseries";
-    this.width = "100%";
-    this.height = "400";
+    this.type = 'timeseries';
+    this.width = '100%';
+    this.height = '600';
 
     // This is the dataSource of the chart
     this.dataSource = {
       caption: {
-        text: "Packet analysis",
+        text: 'Data flow analysis',
       },
       chart: {
-        theme: "fusion",
+        theme: 'gammel',
       },
       subcaption: {
-        text: "Initial time interval spread is from 1-Feb-2019 to 1-Dec-2021",
+        text: 'Initial time interval spread is from 1-Feb-2019 to 1-Dec-2021',
       },
       data: null,
-      yaxis: [
-        {
-          plot: {
-            value: "Grocery Sales Value",
-          },
-          format: {
-            prefix: "$",
-          },
-          title: "Sale Value",
-        },
-      ],
       xaxis: {
         initialinterval: {
-          from: "1-Feb-2019 00:00:00",
-          to: "1-Dec-2021 00:00:00",
+          from: '1-Feb-2019 00:00:00',
+          to: '1-Dec-2021 00:00:00',
         },
       },
     };
+
     this.config = {
-      itemsPerPage: 10,
+      itemsPerPage: 15,
       currentPage: 1,
       totalItems: this.dataSummary.length,
     };
@@ -111,7 +109,31 @@ export class MonitorComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.getIpOptions();
     this.getMonitorData();
+  }
+
+  getIpOptions() {
+    this.ipSourceOptions.push({ id: 0, name: "" });
+    this.ipDestinationOptions.push({ id: 0, name: "" });
+    this.networkData.getAllData('', '').subscribe((networkData) => {
+      var id = 0;
+      networkData.forEach(data => {
+        data.ip_src = data.ip_src.split(',')[0].replace('(', '');
+        data.ip_dst = data.ip_dst.split(',')[0].replace('(', '');
+
+        if (this.ipSourceOptions.find(x => x.name === data.ip_src) === undefined) {
+          this.ipSourceOptions.push({ id: id, name: data.ip_src });
+          id += 1;
+        }
+        if (this.ipSourceOptions.find(x => x.name === data.ip_dst) === undefined) {
+          this.ipDestinationOptions.push({ id: id, name: data.ip_dst });
+          id += 1;
+        }
+
+      });
+      this.optionLoaded = true;
+    });
   }
 
   aggregateData() {
@@ -134,10 +156,19 @@ export class MonitorComponent implements OnInit {
   }
 
   getMonitorData() {
-    this.networkData.getAllData().subscribe((nt_data) => {
+    let filterSrcIp = '';
+    let filterDstIp = '';
+    if (this.ipSourceFilter !== undefined) {
+      filterSrcIp = this.ipSourceFilter.name;
+    }
+    if (this.ipDestinationFilter !== undefined) {
+      filterDstIp = this.ipDestinationFilter.name;
+    }
+    this.networkData.getAllData(filterSrcIp, filterDstIp).subscribe((nt_data) => {
       this.ntData = nt_data;
       this.x = nt_data.map((x) => x.stamp_inserted as Date);
       this.y = nt_data.map((x) => x.packets as number);
+      this.z = nt_data.map((x) => x.bytes as number);
 
       const data = [];
 
@@ -145,22 +176,25 @@ export class MonitorComponent implements OnInit {
         data.push([
           this._dateFormatPipe.transform(new Date(x)),
           this.y[this.x.indexOf(x)],
+          this.z[this.x.indexOf(x)]
         ]);
       });
 
       const schema = [
         {
-          name: "Time",
-          type: "date",
-          format: "%d-%b-%y %-I:%-M:%-S",
+          name: 'Time',
+          type: 'date',
+          format: '%d-%b-%y %-I:%-M:%-S',
         },
         {
-          name: "Quantity",
-          type: "number",
+          name: 'Packtes',
+          type: 'number',
+        },
+        {
+          name: 'Bytes',
+          type: 'number',
         },
       ];
-
-      console.log(data);
 
       const fusionTable = new FusionCharts.DataStore().createDataTable(
         data,

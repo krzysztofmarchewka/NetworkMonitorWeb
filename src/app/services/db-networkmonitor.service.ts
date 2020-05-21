@@ -14,8 +14,12 @@ export class DbNetworkmonitorService {
 
   constructor(private http: HttpClient) { }
 
-  getAllData(): Observable<NetworkMonitor[]> {
-    return this.http.get<NetworkMonitor[]>(environment.API + this.endpoint); // api dane
+  getAllData(ipSourceFiler, ipDestinationFilter): Observable<NetworkMonitor[]> {
+    const params = {
+      'SourceIP': ipSourceFiler,
+      'DestinationIP': ipDestinationFilter
+    }
+    return this.http.get<NetworkMonitor[]>(environment.API + this.endpoint, {params}); // api dane
   }
 
   getDataByID(id: string): Observable<NetworkMonitor> {

@@ -23,7 +23,7 @@ export class ReversednsComponent implements OnInit {
   }
 
   getNetworkData() {
-    this.dbNetworkmonitorService.getAllData().subscribe(data => {
+    this.dbNetworkmonitorService.getAllData("", "").subscribe(data => {
       this.NetworkData = data;
     });
   }
@@ -36,6 +36,7 @@ export class ReversednsComponent implements OnInit {
 
   async updateDNS() {
     var i = 0;
+    console.log(this.NetworkData)
     for (let data of this.NetworkData) {
       await this.delay(1000);
       if (i < 2) {
@@ -67,6 +68,6 @@ export class ReversednsComponent implements OnInit {
   }
 
   delay(ms: number) {
-    return new Promise( resolve => setTimeout(resolve, ms) );
+    return new Promise(resolve => setTimeout(resolve, ms));
   }
 }

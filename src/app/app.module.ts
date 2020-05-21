@@ -26,6 +26,7 @@ import { FusionChartsModule } from "angular-fusioncharts";
 import { DateFormatPipe } from "./pipes/date-format.pipe";
 import { NgApexchartsModule } from "ng-apexcharts";
 import { ReversednsComponent } from "./reversedns/reversedns.component";
+import { FormsModule } from '@angular/forms';
 
 FusionChartsModule.fcRoot(FusionCharts, TimeSeries, FusionTheme);
 
@@ -53,7 +54,8 @@ FusionChartsModule.fcRoot(FusionCharts, TimeSeries, FusionTheme);
     FusionChartsModule,
     NgApexchartsModule,
     NgxPaginationModule,
-    DropdownModule
+    DropdownModule,
+    FormsModule
   ],
   providers: [
     HttpClientModule,

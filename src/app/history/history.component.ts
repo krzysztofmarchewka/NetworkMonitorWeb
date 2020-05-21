@@ -13,14 +13,14 @@ export class HistoryComponent implements OnInit {
 
   historicalData: any
 
-  constructor( private formBuilder: FormBuilder, private db: DbNetworkmonitorService) { }
+  constructor(private formBuilder: FormBuilder, private db: DbNetworkmonitorService) { }
 
   ngOnInit() {
 
   }
 
   loadData() {
-    this.historicalData = this.db.getAllData();
+    this.historicalData = this.db.getAllData("", "");
   }
 
 }
