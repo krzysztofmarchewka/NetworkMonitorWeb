@@ -42,18 +42,15 @@ export class ReversednsComponent implements OnInit {
 
   async updateDNS() {
     let i = 0;
-    let r = /\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b/;
-    console.log(this.UniqueIps);
     for (const ip of this.UniqueIps) {
       await this.delay(1000);
       if (i < 100) {
         i = i + 1;
         console.log(i);
-        let t = ip.match(r)[0];
-        const dns = this.DNSs.find(x => x.ip === t);
+        const dns = this.DNSs.find(x => x.ip === ip);
         console.log(dns)
         if (dns === null || dns === undefined) {
-          this.checkDNS(t);
+          this.checkDNS(ip);
         }
       } else {
         return;

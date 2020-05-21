@@ -125,9 +125,6 @@ export class MonitorComponent implements OnInit {
     this.networkData.getAllData('', '').subscribe((networkData) => {
       let id = 0;
       networkData.forEach(data => {
-        data.ip_src = data.ip_src.split(',')[0].replace('(', '');
-        data.ip_dst = data.ip_dst.split(',')[0].replace('(', '');
-
         if (this.ipSourceOptions.find(x => x.name === data.ip_src) === undefined) {
           this.ipSourceOptions.push({ id, name: data.ip_src });
           id += 1;
@@ -143,40 +140,29 @@ export class MonitorComponent implements OnInit {
   }
 
   aggregateData() {
-    for (const data of this.ntData) {
-      const dataFiltered = this.ntData.filter((x) => x.ip_dst === data.ip_dst);
-      if (this.dataSummary.find((x) => x.ip === data.ip_dst) === undefined) {
-        const temp = new NetworkSummary();
-        let fixed_ip = data.ip_dst.split(',')[0].replace('(', '');
-        temp.ip = data.ip_dst;
-        const dns = this.DNSs.find(x => x.ip === fixed_ip);
+    this.networkData.getSummary().subscribe(summary => {
+      summary.forEach(sum => {
+        this.bytesSum += sum.bytesSent;
+        this.packetsSum += sum.packetsSent;
+        const dns = this.DNSs.find(x => x.ip === sum.ip);
         if (dns !== undefined) {
-          temp.name = dns.name;
+          sum.name = dns.name;
         }
-        dataFiltered.forEach((x) => {
-          temp.packetsSent += x.packets;
-          temp.bytesSent += x.bytes;
-          this.bytesSum += x.bytes;
-          this.packetsSum += x.packets;
-        });
-        this.dataSummary.push(temp);
-      }
-    }
-    this.dataSummary.sort((a, b) => b.bytesSent - a.bytesSent);
+      })
+      this.dataSummary = summary;
+      this.pieData = {
+        labels: this.dataSummary.slice(1, 13).map(x => x.name),
+        datasets: [
+          {
+            data: this.dataSummary.slice(1, 13).map(x => x.bytesSent),
+            backgroundColor: uniqueColors,
+            hoverBackgroundColor: uniqueColors
+          }]
+      };
 
-
-    this.pieData = {
-      labels: this.dataSummary.slice(1, 13).map(x => x.name),
-      datasets: [
-        {
-          data: this.dataSummary.slice(1, 13).map(x => x.bytesSent),
-          backgroundColor: uniqueColors,
-          hoverBackgroundColor: uniqueColors
-        }]
-    };
-
-    this.aggregatedDataLoaded = true;
-    this.spinner.hide();
+      this.aggregatedDataLoaded = true;
+      this.spinner.hide();
+    });
   }
 
   getMonitorData() {
@@ -239,4 +225,4 @@ export class MonitorComponent implements OnInit {
 }
 
 
-export let uniqueColors = ['#FF6384','#36A2EB','#FFCE56','#0bff5b','#ab4c0a','#fb6167','#6cc8f9','#572bdd','#8b0578','#7e20c1','#01e83a','#585564','#1c65e8','#9c1916','#bd479b','#6231c2','#928a58','#4b747b','#202c4c','#d7bbce','#a47aab','#afed65','#f75fc8','#944b62','#042b3c','#b62886','#e1bae1','#57c85d','#39ab36','#bcf7bd','#763d72','#68395a','#795038','#964ca2','#fa9650','#ad3e68','#7a923b','#6f7747','#17d25d','#4fc32e']
+export let uniqueColors = ['#FF6384', '#36A2EB', '#FFCE56', '#0bff5b', '#ab4c0a', '#fb6167', '#6cc8f9', '#572bdd', '#8b0578', '#7e20c1', '#01e83a', '#585564', '#1c65e8', '#9c1916', '#bd479b', '#6231c2', '#928a58', '#4b747b', '#202c4c', '#d7bbce', '#a47aab', '#afed65', '#f75fc8', '#944b62', '#042b3c', '#b62886', '#e1bae1', '#57c85d', '#39ab36', '#bcf7bd', '#763d72', '#68395a', '#795038', '#964ca2', '#fa9650', '#ad3e68', '#7a923b', '#6f7747', '#17d25d', '#4fc32e']
