@@ -93,45 +93,47 @@
   </div>
 </div>
 
-<!-- opcja dla jednego adresu -->
-<div class="header" #SingleIp>
-  <div class="container-fluid">
-    <div class="header-body">
-      <div class="row align-items-end">
-        <div class="col">
-          <h1 class="header-title">
-            Ip address filter
-          </h1>
+<div *ngIf="selectedOption.id === 1">
+  <!-- opcja dla jednego adresu -->
+  <div class="header" #SingleIp>
+    <div class="container-fluid">
+      <div class="header-body">
+        <div class="row align-items-end">
+          <div class="col">
+            <h1 class="header-title">
+              Ip address filter
+            </h1>
+          </div>
         </div>
       </div>
     </div>
   </div>
+
+  <div class="container-fluid" *ngIf="dataLoaded">
+    <div class="table table-striped">
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>Server IP</th>
+            <th>Packets sent</th>
+            <th>Bytes sent</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let data of dataSummary">
+            <td>{{data.ip}}</td>
+            <td>{{data.packetsSent}}</td>
+            <td>{{data.bytesSent}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
 </div>
 
-<div class="container-fluid" *ngIf="dataLoaded">
-  <div class="first">Type IP address you want to scan</div>
-  <input type="text" pKeyFilter="int">
-  <div class="table table-striped">
-    <table class="table table-striped">
-      <thead>
-        <tr>
-          <th>Server IP</th>
-          <th>Packets sent</th>
-          <th>Bytes sent</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let data of dataSummary">
-          <td>{{data.ip}}</td>
-          <td>{{data.packetsSent}}</td>
-          <td>{{data.bytesSent}}</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-
+<div *ngIf="selectedOption.id === 2">
   <!-- opcja dla listy adresów -->
-  <div class="header" #ListIp>
+  <div class="header" #ListIp >
     <div class="container-fluid">
       <div class="header-body">
         <div class="row align-items-end">

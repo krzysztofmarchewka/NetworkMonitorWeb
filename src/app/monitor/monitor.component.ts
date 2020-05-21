@@ -61,6 +61,7 @@ export class MonitorComponent implements OnInit {
       { name: 'Single IP address', id: 1 },
       { name: 'List of the servers', id: 2 },
     ];
+    this.selectedOption = this.options[0];
 
     this.data2 = {
       labels: ['A', 'B', 'C'],
