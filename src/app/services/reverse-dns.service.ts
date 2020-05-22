@@ -10,16 +10,7 @@ export class ReverseDnsService {
 
   endpoint = '/dns';
 
-  params = {
-    q: ''
-  }
-
   constructor(private http: HttpClient) { }
-
-  checkDNS(ip: string) {
-    this.params.q = ip;
-    return this.http.get(environment.REVERSE_DNS_API, { params: this.params, responseType: 'text' });
-  }
 
   getDNSs() {
     return this.http.get<DNS[]>(environment.API + this.endpoint);
@@ -27,6 +18,11 @@ export class ReverseDnsService {
 
   createDNS(dns: DNS) {
     return this.http.post(environment.API + this.endpoint, dns);
+  }
+
+  checkDNS(ip: string) {
+    const dns: DNS = { ip, name: '' };
+    return this.http.post(environment.API + this.endpoint + '/check', dns);
   }
 
 

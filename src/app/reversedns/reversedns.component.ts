@@ -15,6 +15,8 @@ export class ReversednsComponent implements OnInit {
   DNSs: DNS[];
   NetworkData: NetworkMonitor[];
   UniqueIps: string[] = [];
+  ipToCheck: string;
+  dns: string;
 
   constructor(private reverseDnsService: ReverseDnsService
   ) { }
@@ -27,6 +29,15 @@ export class ReversednsComponent implements OnInit {
     this.reverseDnsService.getDNSs().subscribe(dnss => {
       this.DNSs = dnss;
     });
+  }
+
+  checkDNS() {
+    this.dns = '';
+    if (this.ipToCheck !== "" && this.ipToCheck !== undefined) {
+      this.reverseDnsService.checkDNS(this.ipToCheck).subscribe(dns => {
+        this.dns = (dns as DNS).name;
+      });
+    }
   }
 
 }

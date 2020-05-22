@@ -31,6 +31,7 @@ import { TableModule } from 'primeng/table';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import {CalendarModule} from 'primeng/calendar';
 import {ProgressSpinnerModule} from 'primeng/progressspinner';
+import {InputTextModule} from 'primeng/inputtext';
 
 FusionChartsModule.fcRoot(FusionCharts, TimeSeries, FusionTheme);
 
@@ -63,7 +64,8 @@ FusionChartsModule.fcRoot(FusionCharts, TimeSeries, FusionTheme);
     TableModule,
     NgxSpinnerModule,
     CalendarModule,
-    ProgressSpinnerModule
+    ProgressSpinnerModule,
+    InputTextModule
   ],
   providers: [
     HttpClientModule,
