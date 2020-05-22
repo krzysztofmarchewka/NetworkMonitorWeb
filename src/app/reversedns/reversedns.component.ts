@@ -16,70 +16,17 @@ export class ReversednsComponent implements OnInit {
   NetworkData: NetworkMonitor[];
   UniqueIps: string[] = [];
 
-  constructor(private reverseDnsService: ReverseDnsService,
-    private dbNetworkmonitorService: DbNetworkmonitorService
+  constructor(private reverseDnsService: ReverseDnsService
   ) { }
 
   ngOnInit(): void {
     this.getDNSs();
-    this.getNetworkData();
-  }
-
-  getNetworkData() {
-    this.dbNetworkmonitorService.getAllData('', '').subscribe(data => {
-      this.NetworkData = data;
-      data.forEach(ip => {
-        this.UniqueIps.push(ip.ip_dst);
-      });
-    });
   }
 
   getDNSs() {
     this.reverseDnsService.getDNSs().subscribe(dnss => {
       this.DNSs = dnss;
     });
-  }
-
-  async updateDNS() {
-    let i = 0;
-    for (const ip of this.UniqueIps) {
-      await this.delay(1000);
-      if (i < 100) {
-        i = i + 1;
-        console.log(i);
-        const dns = this.DNSs.find(x => x.ip === ip);
-        console.log(dns)
-        if (dns === null || dns === undefined) {
-          this.checkDNS(ip);
-        }
-      } else {
-        return;
-      }
-
-    }
-  }
-
-  async checkDNS(ip: string) {
-
-    await this.reverseDnsService.checkDNS(ip).subscribe(async data => {
-      console.log(data);
-      if (data !== 'no records found') {
-        await this.reverseDnsService.createDNS(new DNS(ip, data.split(' ')[1])).subscribe(x => {
-          console.log('Created dns ' + x);
-          this.getDNSs();
-        });
-      }
-      else {
-        await this.reverseDnsService.createDNS(new DNS(ip, null)).subscribe(x => {
-          console.log('Created dns ' + x);
-          this.getDNSs();
-        });
-      }
-    });
-  }
-
-  delay(ms: number) {
-    return new Promise(resolve => setTimeout(resolve, ms));
   }
 
 }

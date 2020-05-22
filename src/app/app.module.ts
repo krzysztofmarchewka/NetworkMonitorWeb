@@ -29,6 +29,8 @@ import { ReversednsComponent } from './reversedns/reversedns.component';
 import { FormsModule } from '@angular/forms';
 import { TableModule } from 'primeng/table';
 import { NgxSpinnerModule } from 'ngx-spinner';
+import {CalendarModule} from 'primeng/calendar';
+import {ProgressSpinnerModule} from 'primeng/progressspinner';
 
 FusionChartsModule.fcRoot(FusionCharts, TimeSeries, FusionTheme);
 
@@ -59,7 +61,9 @@ FusionChartsModule.fcRoot(FusionCharts, TimeSeries, FusionTheme);
     DropdownModule,
     FormsModule,
     TableModule,
-    NgxSpinnerModule
+    NgxSpinnerModule,
+    CalendarModule,
+    ProgressSpinnerModule
   ],
   providers: [
     HttpClientModule,

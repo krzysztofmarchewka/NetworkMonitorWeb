@@ -44,21 +44,45 @@
     </div>
   </div>
   <hr>
-  <div class="header">
-    <div class="container-fluid">
-      <div class="header-body">
-        <div class="row align-items-end">
-          <div class="col">
-            <h1 class="header-title">
-              Pie chart
-            </h1>
+  <div class="row">
+    <div class="col-6">
+      <div class="header">
+        <div class="container-fluid">
+          <div class="header-body">
+            <div class="d-flex justify-content-center">
+              <h1 class="header-title">
+                Bytes chart
+              </h1>
+            </div>
+          </div>
+        </div>
+        <div class="d-flex justify-content-center">
+          <p-dropdown id="sourceIpDropdown" [options]="chartTypes" (onChange)="detectBytesChartChange($event)"
+            placeholder="Select chart type" optionLabel="name"></p-dropdown>
+        </div>
+        <p-chart *ngIf="pieBytesChartLoaded" [type]="pieBytesChartType.name" [width]="width" [height]="height" [data]="pieBytesData"></p-chart>
+      </div>
+    </div>
+    <div class="col-6">
+      <div class="header">
+        <div class="container-fluid">
+          <div class="header-body">
+            <div class="d-flex justify-content-center">
+              <h1 class="header-title">
+                Packets chart
+              </h1>
+            </div>
           </div>
         </div>
       </div>
+      <div class="d-flex justify-content-center">
+        <p-dropdown id="sourceIpDropdown" [options]="chartTypes" (onChange)="detectPacketsChartChange($event)"
+          placeholder="Select chart type" optionLabel="name"></p-dropdown>
+      </div>
+      <p-chart *ngIf="piePacketsChartLoaded" [type]="piePacketsChartType.name" [width]="width" [height]="height" [data]="piePacketsData"></p-chart>
     </div>
   </div>
 
-  <p-chart type="doughnut" [width]="width" [height]="height"  [data]="pieData"></p-chart>
   <!-- end of cards -->
   <hr>
   <!-- Chart -->
@@ -77,10 +101,12 @@
   </div>
 
 
-  <div>
+  <div *ngIf="chartsLoaded">
     <fusioncharts [type]="type" [width]="width" [height]="height" [dataSource]="dataSource"></fusioncharts>
   </div>
-
+  <div class="d-flex justify-content-center" *ngIf="!chartsLoaded" style="margin: 5%;">
+    <p-progressSpinner></p-progressSpinner>
+  </div>
 
   <div class="d-flex flex-row justify-content-center" style="max-width: 100%;" *ngIf="optionLoaded">
     <div class="d-flex flex-column padded-item">
@@ -92,6 +118,14 @@
       <h5 class="first">Destination IP filter</h5>
       <p-dropdown id="destinationIpDropdown" [filter]="true" [filterBy]="'label'" [options]="ipDestinationOptions"
         [(ngModel)]="ipDestinationFilter" placeholder="Select an option" optionLabel="name"></p-dropdown>
+    </div>
+    <div class="d-flex flex-column padded-item">
+      <h5>From</h5>
+      <p-calendar [(ngModel)]="from" dateFormat="yy/mm/dd" hourFormat="24" [showTime]="true"></p-calendar>
+    </div>
+    <div class="d-flex flex-column padded-item">
+      <h5>To</h5>
+      <p-calendar [(ngModel)]="to" dateFormat="yy/mm/dd" hourFormat="24" [showTime]="true"></p-calendar>
     </div>
 
     <button class="padded-item" type="button" (click)="getMonitorData()" class="btn btn-info btn-lg"> Filter </button>
@@ -114,58 +148,61 @@
       </div>
     </div>
   </div>
-
-  <p-table #dt id="customers" [value]="dataSummary" dataKey="id" [rowHover]="true" [rows]="25"
-    [showCurrentPageReport]="true" [rowsPerPageOptions]="[10,25,50]" [paginator]="true"
-    currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [filterDelay]="100"
-    *ngIf="aggregatedDataLoaded">
-    <ng-template pTemplate="header">
-      <tr>
-        <th> Server IP
-        </th>
-        <th>Reverse DNS
-        </th>
-        <th pSortableColumn="packetsSent">Packets sent <p-sortIcon field="packetsSent"></p-sortIcon>
-        </th>
-        <th pSortableColumn="bytesSent">Bytes sent <p-sortIcon field="bytesSent"></p-sortIcon>
-        </th>
-      </tr>
-      <tr>
-        <th>
-          <input pInputText type="text" (input)="dt.filter($event.target.value, 'ip', 'contains')"
-            placeholder="Search by IP" class="ui-column-filter">
-        </th>
-        <th>
-          <input pInputText type="text" (input)="dt.filter($event.target.value, 'name', 'contains')"
-            placeholder="Search by DNS" class="ui-column-filter">
-        </th>
-        <th>
-        </th>
-        <th>
-        </th>
-      </tr>
-    </ng-template>
-    <ng-template pTemplate="body" let-data>
-      <tr class="ui-selectable-row">
-        <td>
-          {{data.ip}}
-        </td>
-        <td>
-          {{data.name}}
-        </td>
-        <td>
-          {{data.packetsSent}}
-        </td>
-        <td>
-          {{data.bytesSent}}
-        </td>
-      </tr>
-    </ng-template>
-    <ng-template pTemplate="emptymessage">
-      <tr>
-        <td colspan="8" style="text-align:left">No customers found.</td>
-      </tr>
-    </ng-template>
-  </p-table>
+  <div style="margin-left:1% ; margin-right: 1%; margin-top: 2%;">
+    <p-table #dt id="customers" [value]="dataSummary" dataKey="id" [rowHover]="true" [rows]="25"
+      [showCurrentPageReport]="true" [rowsPerPageOptions]="[10,25,50]" [paginator]="true"
+      currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [filterDelay]="100"
+      *ngIf="aggregatedDataLoaded">
+      <ng-template pTemplate="header">
+        <tr>
+          <th> Server IP
+          </th>
+          <th>Reverse DNS
+          </th>
+          <th pSortableColumn="packetsSent">Packets sent <p-sortIcon field="packetsSent"></p-sortIcon>
+          </th>
+          <th pSortableColumn="bytesSent">Bytes sent <p-sortIcon field="bytesSent"></p-sortIcon>
+          </th>
+        </tr>
+        <tr>
+          <th>
+            <input pInputText type="text" (input)="dt.filter($event.target.value, 'ip', 'contains')"
+              placeholder="Search by IP" class="ui-column-filter">
+          </th>
+          <th>
+            <input pInputText type="text" (input)="dt.filter($event.target.value, 'name', 'contains')"
+              placeholder="Search by DNS" class="ui-column-filter">
+          </th>
+          <th>
+          </th>
+          <th>
+          </th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-data>
+        <tr class="ui-selectable-row">
+          <td>
+            {{data.ip}}
+          </td>
+          <td>
+            {{data.name}}
+          </td>
+          <td>
+            {{data.packetsSent}}
+          </td>
+          <td>
+            {{data.bytesSent}}
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="8" style="text-align:left">No customers found.</td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
 </div>
-<ngx-spinner bdColor = "rgba(0, 0, 0, 0.8)" size = "medium" color = "#fff" type = "square-jelly-box" [fullScreen] = "true"><p style="color: white" > Loading... </p></ngx-spinner>
+<ngx-spinner bdColor="rgba(0, 0, 0, 0.8)" size="medium" color="#fff" type="square-jelly-box" [fullScreen]="true">
+  <p style="color: white"> Loading... </p>
+</ngx-spinner>

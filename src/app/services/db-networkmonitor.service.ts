@@ -15,10 +15,12 @@ export class DbNetworkmonitorService {
 
   constructor(private http: HttpClient) { }
 
-  getAllData(ipSourceFiler, ipDestinationFilter): Observable<NetworkMonitor[]> {
+  getAllData(ipSourceFiler, ipDestinationFilter, dateFrom: Date, dateTo: Date): Observable<NetworkMonitor[]> {
     const params = {
       SourceIP: ipSourceFiler,
-      DestinationIP: ipDestinationFilter
+      DestinationIP: ipDestinationFilter,
+      DateFrom: dateFrom.toISOString(),
+      DateTo: dateTo.toISOString()
     }
     return this.http.get<NetworkMonitor[]>(environment.API + this.endpoint, { params }); // api dane
   }

@@ -19,8 +19,4 @@ export class HistoryComponent implements OnInit {
 
   }
 
-  loadData() {
-    this.historicalData = this.db.getAllData("", "");
-  }
-
 }
