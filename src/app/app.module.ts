@@ -16,7 +16,6 @@ import { AppComponent } from './app.component';
 import { HomeComponent } from './home/home.component';
 import { MonitorComponent } from './monitor/monitor.component';
 import { NavbarComponent } from './navbar/navbar.component';
-import { HistoryComponent } from './history/history.component';
 import { SettingsComponent } from './settings/settings.component';
 import { DbNetworkmonitorService } from './services/db-networkmonitor.service';
 import * as FusionCharts from 'fusioncharts';
@@ -41,7 +40,6 @@ FusionChartsModule.fcRoot(FusionCharts, TimeSeries, FusionTheme);
     HomeComponent,
     MonitorComponent,
     NavbarComponent,
-    HistoryComponent,
     SettingsComponent,
     DateFormatPipe,
     ReversednsComponent,

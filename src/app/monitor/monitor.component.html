@@ -166,11 +166,11 @@
         </tr>
         <tr>
           <th>
-            <input pInputText type="text" (input)="dt.filter($event.target.value, 'ip', 'contains')"
+            <input id="ipInput" pInputText type="text" (input)="dt.filter($event.target.value, 'ip', 'contains')"
               placeholder="Search by IP" class="ui-column-filter">
           </th>
           <th>
-            <input pInputText type="text" (input)="dt.filter($event.target.value, 'name', 'contains')"
+            <input id="dnsInput" pInputText type="text" (input)="dt.filter($event.target.value, 'name', 'contains')"
               placeholder="Search by DNS" class="ui-column-filter">
           </th>
           <th>

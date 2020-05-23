@@ -15,27 +15,37 @@
       </div>
     </div>
   </div>
-  <hr>
+  <hr />
   <!-- cards -->
-  <div class="d-flex justify-content-center" style="margin-bottom: 30px; margin-top:30px">
-
+  <div
+    class="d-flex justify-content-center"
+    style="margin-bottom: 30px; margin-top: 30px;"
+  >
     <span class="ui-float-label">
-      <input style="width: 220px;" type="text" pInputText [(ngModel)]="ipToCheck" />
-      <label for="float-input">Type or copy IP address here</label>
+      <input
+        class="ip-input"
+        style="width: 220px;"
+        type="text"
+        pInputText
+        [(ngModel)]="ipToCheck"
+      />
+      <label class="ip" for="float-input">Type or copy IP address here</label>
     </span>
-    <button (click)="checkDNS()" class="btn btn-danger" style="margin-left:10px;margin-right:10px">
+    <button
+      (click)="checkDNS()"
+      class="btn btn-danger"
+      style="margin-left: 10px; margin-right: 10px;"
+    >
       Reverse ->
     </button>
     <span class="ui-float-label">
-      <input style="width: 220px;" type="text" pInputText [(ngModel)]="dns" />
-      <label for="float-input">DNS</label>
+      <input class="dns-input" style="width: 220px;" type="text" pInputText [(ngModel)]="dns" />
+      <label class="dns" for="float-input">DNS</label>
     </span>
-
   </div>
 
   <div class="container">
     <div class="row">
-
       <table class="table table-striped">
         <thead>
           <tr>
@@ -45,15 +55,42 @@
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let dns of DNSs, index as i">
-            <th scope="row">{{i}}</th>
-            <td>{{dns.ip}}</td>
-            <td>{{dns.name}}</td>
+          <tr *ngFor="let dns of DNSs; index as i">
+            <th scope="row">{{ i }}</th>
+            <td>{{ dns.ip }}</td>
+            <td>{{ dns.name }}</td>
           </tr>
         </tbody>
       </table>
-
     </div>
   </div>
 </div>
 <ngx-spinner></ngx-spinner>
+
+<!-- <p-table
+  #dns
+  id="dns"
+  dataKey="id"
+  [value]="DNSs"
+  [rowHover]="true"
+  [rows]="25"
+  [showCurrentPageReport]="true"
+  [rowsPerPageOptions]="[10, 25, 50]"
+  [paginator]="true"
+  *ngIf="dnsLoaded"
+>
+  <ng-template pTemplate="header">
+    <tr>
+      <th>#</th>
+      <th>IP</th>
+      <th>Name</th>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="body" let-data>
+    <tr class="ui-selectable-row">
+      <th>{{ i }}</th>
+      <td>{{ dns.ip }}</td>
+      <td>{{ dns.name }}</td>
+    </tr>
+  </ng-template>
+</p-table> -->

@@ -10,9 +10,6 @@ describe('PagesTests', () => {
     cy.wait(100)
     cy.visit('/reversedns');
     cy.get('.header-title').contains('Check IP address')
-    cy.wait(100)
-    cy.visit('/settings');
-    cy.contains('settings works!')
   });
 
 
