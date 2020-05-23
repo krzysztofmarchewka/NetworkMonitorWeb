@@ -19,6 +19,7 @@ export class ReversednsComponent implements OnInit {
   ipToCheck: string;
   dns: string;
   dnsLoaded: boolean = false;
+  dnsChecked: boolean = true;
 
   constructor(private reverseDnsService: ReverseDnsService) {}
 
@@ -34,10 +35,12 @@ export class ReversednsComponent implements OnInit {
   }
 
   checkDNS() {
+    this.dnsChecked = false;
     this.dns = "";
     if (this.ipToCheck !== "" && this.ipToCheck !== undefined) {
       this.reverseDnsService.checkDNS(this.ipToCheck).subscribe((dns) => {
         this.dns = (dns as DNS).name;
+        this.dnsChecked = true;
       });
     }
   }

@@ -60,7 +60,8 @@
           <p-dropdown id="sourceIpDropdown" [options]="chartTypes" (onChange)="detectBytesChartChange($event)"
             placeholder="Select chart type" optionLabel="name"></p-dropdown>
         </div>
-        <p-chart *ngIf="pieBytesChartLoaded" [type]="pieBytesChartType.name" [width]="width" [height]="height" [data]="pieBytesData"></p-chart>
+        <p-chart *ngIf="pieBytesChartLoaded" [type]="pieBytesChartType.name" [width]="width" [height]="height"
+          [data]="pieBytesData"></p-chart>
       </div>
     </div>
     <div class="col-6">
@@ -79,7 +80,8 @@
         <p-dropdown id="sourceIpDropdown" [options]="chartTypes" (onChange)="detectPacketsChartChange($event)"
           placeholder="Select chart type" optionLabel="name"></p-dropdown>
       </div>
-      <p-chart *ngIf="piePacketsChartLoaded" [type]="piePacketsChartType.name" [width]="width" [height]="height" [data]="piePacketsData"></p-chart>
+      <p-chart *ngIf="piePacketsChartLoaded" [type]="piePacketsChartType.name" [width]="width" [height]="height"
+        [data]="piePacketsData"></p-chart>
     </div>
   </div>
 
@@ -166,7 +168,7 @@
         </tr>
         <tr>
           <th>
-            <input id="ipInput" pInputText type="text" (input)="dt.filter($event.target.value, 'ip', 'contains')"
+            <input id="ipInput" pInputText type="text" (input)="dt.filter($event.target.value, 'ip', 'startsWith')"
               placeholder="Search by IP" class="ui-column-filter">
           </th>
           <th>

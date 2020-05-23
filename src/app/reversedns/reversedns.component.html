@@ -17,34 +17,26 @@
   </div>
   <hr />
   <!-- cards -->
-  <div
-    class="d-flex justify-content-center"
-    style="margin-bottom: 30px; margin-top: 30px;"
-  >
+  <div class="d-flex justify-content-center" style="margin-bottom: 30px; margin-top: 30px;">
     <span class="ui-float-label">
-      <input
-        class="ip-input"
-        style="width: 220px;"
-        type="text"
-        pInputText
-        [(ngModel)]="ipToCheck"
-      />
+      <input class="ip-input" style="width: 220px;" type="text" pInputText [(ngModel)]="ipToCheck" />
       <label class="ip" for="float-input">Type or copy IP address here</label>
     </span>
-    <button
-      (click)="checkDNS()"
-      class="btn btn-danger"
-      style="margin-left: 10px; margin-right: 10px;"
-    >
+    <button *ngIf="dnsChecked" (click)="checkDNS()" class="btn btn-danger"
+      style="margin-left: 10px; margin-right: 10px;">
       Reverse ->
     </button>
+    <div *ngIf="!dnsChecked" style="margin-left: 10px; margin-right: 10px;">
+      <p-progressSpinner [style]="{width: '70px', height: '40px'}" strokeWidth="8" fill="#EEEEEE"
+        animationDuration=".5s"></p-progressSpinner>
+    </div>
     <span class="ui-float-label">
       <input class="dns-input" style="width: 220px;" type="text" pInputText [(ngModel)]="dns" />
       <label class="dns" for="float-input">DNS</label>
     </span>
   </div>
 
-  <div class="container">
+  <!-- <div class="container">
     <div class="row">
       <table class="table table-striped">
         <thead>
@@ -63,34 +55,33 @@
         </tbody>
       </table>
     </div>
+  </div> -->
+  <div class="container">
+    <p-table #dns id="dns" dataKey="id" [value]="DNSs" [rowHover]="true" [rows]="25" [showCurrentPageReport]="true"
+      [rowsPerPageOptions]="[10, 25, 50]" [paginator]="true" *ngIf="dnsLoaded" >
+      <ng-template pTemplate="header">
+        <tr>
+          <th>IP</th>
+          <th>Name</th>
+        </tr>
+        <tr>
+          <th>
+            <input id="ipInput" pInputText type="text" (input)="dns.filter($event.target.value, 'ip', 'startsWith')"
+              placeholder="Search by IP" class="ui-column-filter">
+          </th>
+          <th>
+            <input id="dnsInput" pInputText type="text" (input)="dns.filter($event.target.value, 'name', 'contains')"
+              placeholder="Search by DNS" class="ui-column-filter">
+          </th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-dns>
+        <tr class="ui-selectable-row">
+          <td>{{ dns.ip }}</td>
+          <td>{{ dns.name }}</td>
+        </tr>
+      </ng-template>
+    </p-table>
   </div>
 </div>
 <ngx-spinner></ngx-spinner>
-
-<!-- <p-table
-  #dns
-  id="dns"
-  dataKey="id"
-  [value]="DNSs"
-  [rowHover]="true"
-  [rows]="25"
-  [showCurrentPageReport]="true"
-  [rowsPerPageOptions]="[10, 25, 50]"
-  [paginator]="true"
-  *ngIf="dnsLoaded"
->
-  <ng-template pTemplate="header">
-    <tr>
-      <th>#</th>
-      <th>IP</th>
-      <th>Name</th>
-    </tr>
-  </ng-template>
-  <ng-template pTemplate="body" let-data>
-    <tr class="ui-selectable-row">
-      <th>{{ i }}</th>
-      <td>{{ dns.ip }}</td>
-      <td>{{ dns.name }}</td>
-    </tr>
-  </ng-template>
-</p-table> -->
