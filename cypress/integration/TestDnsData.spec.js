@@ -7,13 +7,15 @@ describe("DNS loading Test", () => {
   it("Check if DNS data is loaded", () => {
     cy.server();
     cy.route("GET", "api/dns");
-    cy.get(".table");
-    cy.get("th").contains("#");
+    cy.get("p-table");
     cy.get("th").contains("IP");
     cy.get("th").contains("Name");
-    cy.get("tbody>tr").eq(0);
-    cy.get("th").should("contain", "0");
+    cy.get("#dns > div > div > table > tbody > tr:nth-child(1) > td:nth-child(1)").contains("172.217.23.102")
+    cy.get("#dns > div > div > table > tbody > tr:nth-child(1) > td:nth-child(2)").contains("fra16s45-in-f6.1e100.net")
   });
+
+  ipInput = 'body > app-root > app-reversedns > div > div.d-flex.justify-content-center > span:nth-child(1) > input'
+  dnsInput = 'body > app-root > app-reversedns > div > div.d-flex.justify-content-center > span:nth-child(3) > input'
 
   it("Check input and output", () => {
     cy.viewport(1500, 900);
@@ -26,38 +28,38 @@ describe("DNS loading Test", () => {
   });
 
   it("Tests if existing DNS works", () => {
-    cy.get(".ip-input").type("172.217.23.102");
+    cy.get(ipInput).type("172.217.23.102");
     cy.get(".btn-danger").click();
     cy.wait(200);
-    cy.get(".dns-input")
+    cy.get(dnsInput)
       .invoke("val")
       .then(() => {
         const firstDNS = "mil04s23-in-f102.1e100.net";
-        cy.get(".dns-input").should("have.value",firstDNS)
+        cy.get(dnsInput).should("have.value",firstDNS)
         cy.log(firstDNS);
       });
-    cy.get(".ip-input").clear();
-    cy.get(".ip-input").type("172.217.16.168");
+    cy.get(ipInput).clear();
+    cy.get(ipInput).type("172.217.16.168");
     cy.get(".btn-danger").click();
     cy.wait(200);
-    cy.get(".dns-input")
+    cy.get(dnsInput)
       .invoke("val")
       .then(() => {
-        const secondDNS = "fra15s11-in-f8.1e100.net";
-        cy.get(".dns-input").should("have.value", secondDNS)
+        const secondDNS = "fra15s11-in-f168.1e100.net";
+        cy.get(dnsInput).should("have.value", secondDNS)
         cy.log(secondDNS);
       });
   });
   it("Tests proper error with not exisitng IP address", () => {
-    cy.get(".ip-input").clear();
-    cy.get(".ip-input").type("100.200.300.4");
+    cy.get(ipInput).clear();
+    cy.get(ipInput).type("100.200.300.4");
     cy.get(".btn-danger").click();
     cy.wait(200);
-    cy.get(".dns-input")
+    cy.get(dnsInput)
       .invoke("val")
       .then(() => {
         const error = "DNS not found";
-        cy.get(".dns-input").should("have.value", error)
+        cy.get(dnsInput).should("have.value", error)
         cy.log(error);
       });
   });
